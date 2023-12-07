@@ -5,19 +5,19 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 
 public class TableroControllerView implements Initializable {
 
     @FXML
     private GridPane gridJugador;
     @FXML
-    private Label NombreJugador;
+    private Label BarcosActivos;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -44,8 +44,12 @@ public class TableroControllerView implements Initializable {
 
     @FXML
     public void onAbandonarButtonClick() {
-        Stage stage = (Stage) NombreJugador.getScene().getWindow();
-        stage.close();
+      
+            Stage stage = (Stage) BarcosActivos.getScene().getWindow();
+            stage.close();
+        
+       
+        
     }
 
 }
