@@ -1,48 +1,48 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package views;
 
+import javafx.scene.paint.Paint;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-/**
- *
- * @author net
- */
+
 public class TableroControllerView implements Initializable {
+
     
+   
+
     @FXML
     private Label NombreJugador;
-    //private TableroBatalla tableroModel; // Agregamos una referencia al modelo
+    @FXML
+    private GridPane ZonaJugador;
 
-   /* public void setTableroModel(TableroBatalla tableroModel) {
-        this.tableroModel = tableroModel;
-    }*/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         
+        for (int i = 0; i < 10; i++) { 
+      for (int j = 0; j < 10; j++) {
+
+          Rectangle rect = new Rectangle(40,40);
+          rect.setFill(Paint.valueOf("#000"));
+      
+
+
+          ZonaJugador.add(rect, i, j);
+      }
+  }  
         
     }
-    
+
     @FXML
     public void onAbandonarButtonClick() {
-         Stage stage = (Stage) NombreJugador.getScene().getWindow();
+        Stage stage = (Stage) NombreJugador.getScene().getWindow();
         stage.close();
     }
-   
+
 }
