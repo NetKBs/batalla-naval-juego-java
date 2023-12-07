@@ -1,7 +1,6 @@
 
 package views;
 
-import javafx.scene.paint.Paint;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -11,32 +10,36 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import javafx.geometry.Pos;
 
 public class TableroControllerView implements Initializable {
 
-    
-   
-
+    @FXML
+    private GridPane gridJugador;
     @FXML
     private Label NombreJugador;
-    @FXML
-    private GridPane ZonaJugador;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        
-        for (int i = 0; i < 10; i++) { 
-      for (int j = 0; j < 10; j++) {
+        double gridAncho = gridJugador.getPrefWidth();
+        double gridAlto = gridJugador.getPrefHeight();
 
-          Rectangle rect = new Rectangle(40,40);
-          rect.setFill(Paint.valueOf("#000"));
-      
+        int columnasTablero = 10;
+        int filasTablero = 10;
 
+        for (int x = 0; x < columnasTablero; x++) {
+            for (int y = 0; y < filasTablero; y++) {
+                Rectangle rectangulo = new Rectangle();
+                rectangulo.setWidth(gridAncho / columnasTablero - 2);
+                rectangulo.setHeight(gridAlto / filasTablero - 2);
 
-          ZonaJugador.add(rect, i, j);
-      }
-  }  
-        
+                rectangulo.applyCss();
+
+                gridJugador.add(rectangulo, x, y);
+                gridJugador.setAlignment(Pos.CENTER);
+
+            }
+        }
     }
 
     @FXML
