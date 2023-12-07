@@ -40,10 +40,12 @@ public class InicioControllerView implements Initializable{
     public void onJugarButtonClick() throws IOException {
         try {
             // Cargar el nuevo FXML (tablero.fxml)
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("tablero.fxml"));
-            AnchorPane tableroPane = fxmlLoader.load();
+           
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/tablero.fxml"));
+            AnchorPane tableroPane = loader.load();
             // Crear una nueva escena
-            Scene tableroScene = new Scene(tableroPane, 765, 443);
+            Scene tableroScene = new Scene(tableroPane);
             // Obtener el escenario actual (ventana)
             Stage stage2 = (Stage) BotonJugar.getScene().getWindow();
             // Configurar la nueva escena en el escenario actual
