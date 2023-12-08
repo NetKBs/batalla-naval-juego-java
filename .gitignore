@@ -1,3 +1,7 @@
 /build/
 /nbproject/private/
+<<<<<<< HEAD
 .vscode
+=======
+/dist/
+>>>>>>> 02339dbb71033f8aa0d841a875534d08fb4876b2

@@ -1,3 +1,4 @@
+
 package views;
 
 import java.net.URL;
@@ -12,6 +13,10 @@ import javafx.animation.AnimationTimer;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -31,6 +36,7 @@ public class TableroControllerView implements Initializable {
     @FXML
     private GridPane gridJugador;
     @FXML
+
     private Label labelPortaavion;
     @FXML
     private Label labelAcorazado;
@@ -218,6 +224,9 @@ public class TableroControllerView implements Initializable {
 
     @FXML
     public void onAbandonarButtonClick() {
+
+        Stage stage = (Stage) gridJugador.getScene().getWindow();
+        stage.close();
 
     }
 
