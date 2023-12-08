@@ -88,7 +88,14 @@ public class TableroControllerView implements Initializable {
                             Stage stageActual = (Stage) labelPortaavion.getScene().getWindow();
                             stageActual.setScene(scene);
                             stageActual.setTitle("Fin Del Juego");
-                       
+                            
+                            
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(TableroControllerView.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            
                            
                         } catch (IOException ex) {
                             Logger.getLogger(TableroControllerView.class.getName()).log(Level.SEVERE, null, ex);

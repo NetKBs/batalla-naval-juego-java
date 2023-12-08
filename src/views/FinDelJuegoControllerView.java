@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import logic.Juego;
 
 public class FinDelJuegoControllerView implements Initializable {
 
@@ -17,6 +18,7 @@ public class FinDelJuegoControllerView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Juego.getInstance().reiniciarJuego();
     }
 
     @FXML
