@@ -328,4 +328,8 @@ public class Juego {
     public int getMayorAtaqueJugador() {
         return mayorAtaqueJugador;
     }
+
+    public void reiniciarJuego() {
+        instance = new Juego();
+    }
 }
