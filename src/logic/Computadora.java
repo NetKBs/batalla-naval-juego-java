@@ -29,6 +29,21 @@ public class Computadora {
         return tablero;
     }
 
+
+    
+    public Coord atacarAleatoriamente() {
+
+       Coord coord = generarCoordenadas();
+
+        while (verificarCoordenadaDeAtaque(coord.x, coord.y)) {
+            coord.x = (int) (Math.random() * 10);
+            coord.y = (int) (Math.random() * 10);
+        }
+
+        ataquesCoordenadas.add(coord);
+        return coord;
+    }
+
     private void propagarTablero() {
 
         while (portaaviones == 0) {
@@ -170,6 +185,7 @@ public class Computadora {
     }
 
     private Coord generarCoordenadas() {
+
         int fila = (int) (Math.random() * 10);
         int columna = (int) (Math.random() * 10);
 
