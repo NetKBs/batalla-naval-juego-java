@@ -8,7 +8,7 @@ enum Direccion{
 public abstract class Barco {
     private Direccion direccion;
     private int casillas;
-    private int disparos;
+    public int disparos;
     private int piezasIntactas;
     
     public int id;

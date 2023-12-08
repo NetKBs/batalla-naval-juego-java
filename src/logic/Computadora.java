@@ -23,43 +23,128 @@ public class Computadora {
         }
     }
 
-    public void propagarTablero() {
-        while (portaaviones != 0) {
-            Portaaviones barco = new Portaaviones(obtenerDireccionAleatoria());
-            Coordenada coords = obtenerPosicionBarcoValida(barco);
-            
-            if (coords != null) {
-                portaaviones++;
-                barco.id = portaaviones;
-                
-            }
-        }
+    public Barco[][] getTablero() {
+        return tablero;
     }
     
-    public Coordenada obtenerPosicionBarcoValida(Barco barco) {
-        Coordenada coords_propuestas = generarCoordenadas();
-        int fila = coords_propuestas.fila;
-        int columna = coords_propuestas.columna;
-        
-        if (posicionValidaParaBarcos(fila + (barco.getCasillas()-1), columna)) { // extender adelante
-            return new Coordenada(fila + (barco.getCasillas()-1), columna);
-            
-        } else if (posicionValidaParaBarcos(fila, columna + (barco.getCasillas()-1))){ // extender hacia atrás
-            return new Coordenada(fila, columna + (barco.getCasillas()-1));
-            
-        } else {
-            return null;
+    public void propagarTablero() {
+
+        while (portaaviones == 0) {
+            Portaaviones barco = new Portaaviones(obtenerDireccionAleatoria());
+            Coordenada coords_iniciales = generarCoordenadas();;
+            boolean coordsFinalesValidacion = verificarPosicionBarcoFinal(barco, coords_iniciales);
+
+            if (coordsFinalesValidacion) {
+                portaaviones++;
+                barco.id = portaaviones;
+                agregarBarco(barco, coords_iniciales.fila, coords_iniciales.columna);
+            }
         }
-        
-        
+
+        while (acorazado == 0) {
+            Acorazado barco = new Acorazado(obtenerDireccionAleatoria());
+            Coordenada coords_iniciales = generarCoordenadas();;
+            boolean coordsFinalesValidacion = verificarPosicionBarcoFinal(barco, coords_iniciales);
+
+            if (coordsFinalesValidacion) {
+                acorazado++;
+                barco.id = acorazado;
+                agregarBarco(barco, coords_iniciales.fila, coords_iniciales.columna);
+            }
+        }
+
+        while (destructores < 2) {
+            Destructor barco = new Destructor(obtenerDireccionAleatoria());
+            Coordenada coords_iniciales = generarCoordenadas();;
+            boolean coordsFinalesValidacion = verificarPosicionBarcoFinal(barco, coords_iniciales);
+
+            if (coordsFinalesValidacion) {
+                destructores++;
+                barco.id = destructores;
+                agregarBarco(barco, coords_iniciales.fila, coords_iniciales.columna);
+            }
+        }
+
+        while (fragatas < 3) {
+            Fragata barco = new Fragata(obtenerDireccionAleatoria());
+            Coordenada coords_iniciales = generarCoordenadas();;
+            boolean coordsFinalesValidacion = verificarPosicionBarcoFinal(barco, coords_iniciales);
+
+            if (coordsFinalesValidacion) {
+                fragatas++;
+                barco.id = fragatas;
+                agregarBarco(barco, coords_iniciales.fila, coords_iniciales.columna);
+            }
+        }
+
+        while (submarinos < 5) {
+            Submarino barco = new Submarino(obtenerDireccionAleatoria());
+            Coordenada coords_iniciales = generarCoordenadas();
+            boolean coordsFinalesValidacion = verificarPosicionBarcoFinal(barco, coords_iniciales);
+
+            if (coordsFinalesValidacion) {
+                submarinos++;
+                barco.id = submarinos;
+                agregarBarco(barco, coords_iniciales.fila, coords_iniciales.columna);
+            }
+        }
+
     }
 
-    public void agregarBarco(Barco barco, int fila, int columna) {
-        tablero[fila][columna] = barco;
+    public boolean verificarPosicionBarcoFinal(Barco barco, Coordenada coords_propuestas) {
+
+        int fila = coords_propuestas.fila;
+        int columna = coords_propuestas.columna;
+
+        if (barco.getDireccion() == Direccion.HORIZONTAL) {
+            int columna_final = columna + barco.getCasillas();
+
+            for (int columna_index = columna; columna_index < columna_final; columna_index++) {
+                if (!posicionValidaParaBarcos(fila, columna_index)) {
+                    return false;
+                }
+            }
+
+        } else { // Vertical
+            int fila_final = fila + barco.getCasillas();
+
+            for (int fila_index = fila; fila_index < fila_final; fila_index++) {
+                if (!posicionValidaParaBarcos(fila_index, columna)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+
     }
 
     public boolean posicionValidaParaBarcos(int fila, int columna) {
-        return tablero[fila][columna] == null;
+
+        if (fila >= 10 || columna >= 10) { // fuera de limites
+            return false;
+
+        } else {
+            return tablero[fila][columna] == null; // nulo o no
+        }
+    }
+
+    public void agregarBarco(Barco barco, int fila, int columna) {
+
+        if (barco.getDireccion() == Direccion.HORIZONTAL) {
+            int columna_final = columna + barco.getCasillas();
+
+            for (int columna_index = columna; columna_index < columna_final; columna_index++) {
+                tablero[fila][columna_index] = barco;
+            }
+
+        } else { // Vertical
+            int fila_final = fila + barco.getCasillas();
+
+            for (int fila_index = fila; fila_index < fila_final; fila_index++) {
+                tablero[fila_index][columna] = barco;
+            }
+        }
     }
 
     Direccion obtenerDireccionAleatoria() {
@@ -73,7 +158,7 @@ public class Computadora {
 
         Coordenada coord = generarCoordenadas();
 
-        while (verificarCoordenada(coord.fila, coord.columna, ataquesCoordenadas)) {
+        while (verificarCoordenadaDeAtaque(coord.fila, coord.columna)) {
             coord.fila = (int) (Math.random() * 10);
             coord.columna = (int) (Math.random() * 10);
         }
@@ -89,8 +174,8 @@ public class Computadora {
         return new Coordenada(fila, columna);
     }
 
-    private boolean verificarCoordenada(int fila, int columna, List<Coordenada> listaCoordenadas) {
-        for (Coordenada coordenada : listaCoordenadas) {
+    private boolean verificarCoordenadaDeAtaque(int fila, int columna) {
+        for (Coordenada coordenada : ataquesCoordenadas) {
             if (coordenada.fila == fila && coordenada.columna == columna) {
                 return true;
             }
@@ -98,11 +183,75 @@ public class Computadora {
         return false;
     }
 
-    /*
-      public static void main(String[] args) {
-          Computadora ia = new Computadora();
-          Coordenada coords;
-          coords = ia.atacarAleatoriamente();
-          System.out.println("Columna: " + coords.columna + " Fila: " + coords.fila);
-      }*/
+    public static void main(String[] args) {
+        Computadora ia = new Computadora();
+       
+        // Pruebas de ataque
+        Coordenada Ataquecoord;  
+        
+        for (int i = 0; i < 10; i++) {
+            Ataquecoord = ia.atacarAleatoriamente();
+            System.out.println("fila: " + Ataquecoord.fila + " columna:" + Ataquecoord.columna);
+        }
+        System.out.println("\n");
+
+        // Pruebas de propagacion
+        ia.propagarTablero();
+        Barco[][] tablero = ia.getTablero();
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (tablero[i][j] != null) {
+
+                    if (tablero[i][j] instanceof Portaaviones) {
+                        System.out.print("P" + " "); // P for Portaaviones
+
+                    } else if (tablero[i][j] instanceof Acorazado) {
+                        System.out.print("A" + " ");
+
+                    } else if (tablero[i][j] instanceof Destructor) {
+                        System.out.print("D" + " ");
+
+                    } else if (tablero[i][j] instanceof Fragata) {
+                        System.out.print("F" + " ");
+                    } else if (tablero[i][j] instanceof Submarino) {
+                        System.out.print("S" + " ");
+                    }
+
+                } else {
+                    System.out.print("*" + " ");
+                }
+
+            }
+            System.out.println();
+        }
+        
+        // Verificacion de instancias compartidas
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (tablero[i][j] != null) {
+
+                    if (tablero[i][j] instanceof Portaaviones) {
+                        int disparos = tablero[i][j].disparos - 1;
+                        tablero[i][j].disparos = disparos;
+                        System.out.println("Tipo: Portaaviones Id: " + tablero[i][j].id + " Coords: " + i + "," + j);
+                        System.out.println("disparos: " + disparos);
+                        System.out.println("\n");
+
+                    } else if (tablero[i][j] instanceof Destructor) {
+                        int disparos = tablero[i][j].disparos - 1;
+                        tablero[i][j].disparos = disparos;
+                        System.out.println("Tipo: Destructor Id: " + tablero[i][j].id  + " Coords: " + i + "," + j);
+                        System.out.println("disparos: " + disparos);
+                        System.out.println("\n");
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
 }
