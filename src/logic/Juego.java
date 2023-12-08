@@ -16,6 +16,8 @@ public class Juego {
     private Map<String, Integer> cantidadesBarcos = new HashMap<>();
     private Queue<Barco> barcosDisponibles = new LinkedList<Barco>();
 
+    private Turno turno;
+
     private Juego() {
         int boardColumns = 10;
         int boardRows = 10;
@@ -75,7 +77,7 @@ public class Juego {
         barcosDisponibles.poll();
 
         if (barcosDisponibles.size() == 0) {
-            fase = Fase.ATAQUE;
+            fase = Fase.ESPERA;
         }
     }
 
@@ -136,6 +138,27 @@ public class Juego {
 
     public Fase getFase() {
         return fase;
+    }
+
+    public Turno getTurno() {
+        return turno;
+    }
+
+    public void cambiarTurno() {
+        if (turno == Turno.COMPUTADORA) {
+            turno = Turno.JUGADOR;
+        } else {
+            turno = Turno.COMPUTADORA;
+        }
+    }
+
+    public void setFase(Fase nuevaFase) {
+        if (fase == Fase.ESPERA && nuevaFase == Fase.ATAQUE) {
+            // TURNO ALEATORIO
+            turno = Turno.values()[(int) (Math.random() * Turno.values().length)];
+        }
+
+        fase = nuevaFase;
     }
 
     public Queue<Barco> getBarcosDisponibles() {

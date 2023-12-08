@@ -2,6 +2,6 @@ package logic;
 
 public enum Fase {
     DESPLIGUE,
-    ESPERANDO,
+    ESPERA,
     ATAQUE,
 }
