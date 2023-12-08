@@ -96,8 +96,9 @@ public class TableroJugador {
             public void handle(long now) {
 
                 Fase fase = juego.getFase();
+                Turno turno = juego.getTurno();
 
-                if (fase == Fase.ATAQUE && juego.getTurno() == Turno.COMPUTADORA) {
+                if (fase == Fase.ATAQUE && turno == Turno.COMPUTADORA) {
                     juego.ataqueEnemigo();
                     juego.cambiarTurno();
                 }

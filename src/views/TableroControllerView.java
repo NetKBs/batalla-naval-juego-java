@@ -2,6 +2,7 @@
 package views;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -13,6 +14,12 @@ import javafx.stage.Stage;
 
 import javafx.scene.control.Label;
 import logic.*;
+
+enum Ganador {
+    JUGADOR,
+    COMPUTADORA,
+    EMPATE
+}
 
 public class TableroControllerView implements Initializable {
 
@@ -55,11 +62,130 @@ public class TableroControllerView implements Initializable {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                int barcosRestantesAtaqueJugador = juego.getBarcosDisponiblesAtaque().size();
-                int barcosRestantesAtaqueComputadora = juego.getBarcosDisponiblesAtaqueComputadora().size();
 
-                if (barcosRestantesAtaqueJugador == 0 && barcosRestantesAtaqueComputadora == 0) {
-                    // abrir vetana de resultados
+                if (juego.getFase() == Fase.ATAQUE) {
+                    Ganador ganador = this.verificaGanador();
+
+                    if (ganador != null) {
+                        // terminar juego XD
+                    }
+
+                }
+
+            }
+
+            public Ganador verificaGanador() {
+                int barcosDisponiblesJugador = juego.getBarcosDisponiblesAtaque().size();
+                int barcosDisponiblesComputadora = juego.getBarcosDisponiblesAtaqueComputadora().size();
+
+                Ganador porHundimiento = verificarGanadorPorHundimiento();
+
+                if (barcosDisponiblesJugador > 0 || barcosDisponiblesComputadora > 0 || porHundimiento == null) {
+                    return null;
+                }
+
+                Ganador porCeldas = verificarGanadorPorCeldas();
+                Ganador porBarcosVivos = verificarGanadorPorBarcosVivos();
+                Ganador porAtaquesSeguidos = verificaGanadorPorAtaquesSeguidos();
+
+                if (porHundimiento != Ganador.EMPATE) {
+                    return porHundimiento;
+                } else if (porCeldas != Ganador.EMPATE) {
+                    return porCeldas;
+                } else if (porBarcosVivos != Ganador.EMPATE) {
+                    return porBarcosVivos;
+                } else if (porAtaquesSeguidos != Ganador.EMPATE) {
+                    return porAtaquesSeguidos;
+                } else {
+                    return Ganador.EMPATE;
+                }
+            }
+
+            public Ganador verificarGanadorPorHundimiento() {
+                boolean userWin = true;
+                boolean computerWin = true;
+
+                for (Barco barco : juego.getBarcosComputadora()) {
+                    if (barco.getPiezasIntactas() > 0) {
+                        userWin = false;
+                    }
+                }
+
+                for (Barco barco : juego.getBarcosJugador()) {
+                    if (barco.getPiezasIntactas() > 0) {
+                        computerWin = false;
+                    }
+                }
+
+                if (userWin) {
+                    return Ganador.JUGADOR;
+                } else if (computerWin) {
+                    return Ganador.COMPUTADORA;
+                } else if (!userWin && !computerWin) {
+                    return null;
+                } else {
+                    return Ganador.EMPATE;
+                }
+            }
+
+            public Ganador verificarGanadorPorCeldas() {
+
+                int celdasJugador = 0;
+                int celdasComputadora = 0;
+
+                for (Barco barco : juego.getBarcosJugador()) {
+                    celdasJugador += barco.getPiezasIntactas();
+                }
+
+                for (Barco barco : juego.getBarcosComputadora()) {
+                    celdasComputadora += barco.getPiezasIntactas();
+                }
+
+                if (celdasJugador > celdasComputadora) {
+                    return Ganador.JUGADOR;
+                } else if (celdasComputadora > celdasJugador) {
+                    return Ganador.COMPUTADORA;
+                } else {
+                    return Ganador.EMPATE;
+                }
+            }
+
+            public Ganador verificarGanadorPorBarcosVivos() {
+
+                int vivosJugador = 0;
+                int vivosComputadora = 0;
+
+                for (Barco barco : juego.getBarcosJugador()) {
+                    if (barco.getPiezasIntactas() > 0) {
+                        vivosJugador++;
+                    }
+                }
+
+                for (Barco barco : juego.getBarcosComputadora()) {
+                    if (barco.getPiezasIntactas() > 0) {
+                        vivosComputadora++;
+                    }
+                }
+
+                if (vivosJugador > vivosComputadora) {
+                    return Ganador.JUGADOR;
+                } else if (vivosComputadora > vivosJugador) {
+                    return Ganador.COMPUTADORA;
+                } else {
+                    return Ganador.EMPATE;
+                }
+            }
+
+            public Ganador verificaGanadorPorAtaquesSeguidos() {
+                int seguidosJugador = juego.getMayorAtaqueJugador();
+                int seguidosComputadora = juego.getMayorAtaqueComputadora();
+
+                if (seguidosJugador > seguidosComputadora) {
+                    return Ganador.JUGADOR;
+                } else if (seguidosComputadora > seguidosJugador) {
+                    return Ganador.COMPUTADORA;
+                } else {
+                    return Ganador.EMPATE;
                 }
             }
         };
