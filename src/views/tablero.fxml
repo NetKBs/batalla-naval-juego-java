@@ -6,7 +6,26 @@
 
 <AnchorPane prefHeight="534.0" prefWidth="909.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.TableroControllerView">
    <children>
+      <Label layoutX="78.0" layoutY="14.0" text="Tus Barcos" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="200.0" layoutX="14.0" layoutY="13.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+
+      <Rectangle fx:id="PortAvion" arcHeight="5.0" arcWidth="5.0" fill="#2c4380" height="120.0" layoutX="27.0" layoutY="36.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+      <Rectangle fx:id="Acorazado" arcHeight="5.0" arcWidth="5.0" fill="#258010" height="90.0" layoutX="62.0" layoutY="51.0" stroke="BLACK" strokeType="INSIDE" width="31.0" />
+      <Rectangle fx:id="Destructor" arcHeight="5.0" arcWidth="5.0" fill="#214322" height="70.0" layoutX="99.0" layoutY="61.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+      <Rectangle fx:id="Fragata" arcHeight="5.0" arcWidth="5.0" fill="#64691e" height="50.0" layoutX="138.0" layoutY="71.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+      <Rectangle fx:id="Submarino" arcHeight="5.0" arcWidth="5.0" fill="#17125a" height="25.0" layoutX="177.0" layoutY="84.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+     
+      
+      <Label fx:id="labelPortaavion" layoutX="34.0" layoutY="163.0" />
+      <Label fx:id="labelAcorazado" layoutX="70.0" layoutY="148.0"/>
+      <Label fx:id="labelDestructor" layoutX="106.0" layoutY="140.0" />
+      <Label fx:id="labelFragata" layoutX="145.0" layoutY="132.0" />
+      <Label fx:id="labelSubmarino" layoutX="184.0" layoutY="113.0" />
+      
+      <Label fx:id="BarcosPerdidos" layoutX="110.0" layoutY="301.0" />
+      <Label fx:id="BarcosActivos" layoutX="110.0" layoutY="349.0" />
+      
+      
       <GridPane fx:id="gridJugador" layoutX="248.0" layoutY="129.0" prefHeight="300.0" prefWidth="300.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0" />
@@ -38,19 +57,7 @@
       <Label layoutX="62.0" layoutY="285.0" text="Barcos Perdidos:" />
       <Label layoutX="66.0" layoutY="333.0" text="Barcos Activos:" />
       <Button fx:id="Abandonar" layoutX="48.0" layoutY="463.0" mnemonicParsing="false" onAction="#onAbandonarButtonClick" prefHeight="40.0" prefWidth="134.0" text="Abandonar Batalla" />
-      <Rectangle fx:id="PortAvion" arcHeight="5.0" arcWidth="5.0" fill="#2c4380" height="120.0" layoutX="27.0" layoutY="36.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
-      <Rectangle fx:id="Acorazado" arcHeight="5.0" arcWidth="5.0" fill="#258010" height="90.0" layoutX="62.0" layoutY="51.0" stroke="BLACK" strokeType="INSIDE" width="31.0" />
-       <Rectangle fx:id="Destructor" arcHeight="5.0" arcWidth="5.0" fill="#214322" height="70.0" layoutX="99.0" layoutY="61.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
-       <Rectangle fx:id="Fragata" arcHeight="5.0" arcWidth="5.0" fill="#64691e" height="50.0" layoutX="138.0" layoutY="71.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
-       <Rectangle fx:id="Submarino" arcHeight="5.0" arcWidth="5.0" fill="#17125a" height="25.0" layoutX="177.0" layoutY="84.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
-      <Label layoutX="78.0" layoutY="14.0" text="Tus Barcos" />
-      <Label fx:id="NumeroPortAvion" layoutX="34.0" layoutY="163.0" text="x1" />
-      <Label fx:id="NumeroAcorazado" layoutX="70.0" layoutY="148.0" text="x1" />
-      <Label fx:id="NumeroDestructor" layoutX="106.0" layoutY="140.0" text="x2" />
-      <Label fx:id="NumeroFragata" layoutX="145.0" layoutY="132.0" text="x3" />
-      <Label fx:id="NumeroSubmarino" layoutX="184.0" layoutY="113.0" text="x5" />
-      <Label fx:id="BarcosPerdidos" layoutX="110.0" layoutY="301.0" text="0" />
-      <Label fx:id="BarcosActivos" layoutX="110.0" layoutY="349.0" text="0" />
+     
       <Label fx:id="" layoutX="368.0" layoutY="101.0" text="Tu Zona" />
       <GridPane fx:id="ZonaEnemigo" gridLinesVisible="true" layoutX="589.0" layoutY="129.0" prefHeight="300.0" prefWidth="300.0">
          <columnConstraints>
