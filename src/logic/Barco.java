@@ -7,25 +7,23 @@ enum Direccion{
 
 public abstract class Barco {
     private Direccion direccion;
-    private Number casillas;
-    private Number disparos;
-    private int[] extension = new int[2]; // a-b
-    private Number piezasIntactas;
+    private int casillas;
+    private int disparos;
+    private int piezasIntactas;
+    
+    public int id;
 
-    public Barco(Direccion direccion, Number casillas, Number disparos, int puntoA, int puntoB) {
+    public Barco(Direccion direccion, int casillas, int disparos) {
+        this.id = 0;
         this.direccion = direccion;
         this.casillas = casillas;
         this.piezasIntactas = casillas;
         this.disparos = disparos;
-        this.extension[0] = puntoA;
-        this.extension[1] = puntoB;
+     
     }
     
-    public int[] getExtension() {
-        return extension;
-    }
-    
-    public Number getPiezasIntactas() {
+   
+    public int getPiezasIntactas() {
         return piezasIntactas;
     }
 
@@ -33,19 +31,16 @@ public abstract class Barco {
         return direccion;
     }
 
-    public Number getCasillas() {
+    public int getCasillas() {
         return casillas;
     }
 
-    public Number getDisparos() {
+    public int getDisparos() {
         return disparos;
     }
+  
     
-    public void setExtension(int[]  extension) {
-        this.extension = extension;
-    }
-    
-    public void setPiezasIntactas(Number piezasIntactas) {
+    public void setPiezasIntactas(int piezasIntactas) {
         this.piezasIntactas = piezasIntactas;
     }
 
@@ -53,11 +48,11 @@ public abstract class Barco {
         this.direccion = direccion;
     }
 
-    public void setCasillas(Number casillas) {
+    public void setCasillas(int casillas) {
         this.casillas = casillas;
     }
 
-    public void setDisparos(Number disparos) {
+    public void setDisparos(int disparos) {
         this.disparos = disparos;
     }
     
