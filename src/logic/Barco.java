@@ -4,17 +4,25 @@ public abstract class Barco {
     private Direccion direccion;
     private int casillas;
     public int disparos;
+
     private int piezasIntactas;
+    private int disparosRestantes;
+
+    private String nombre;
 
     public int id;
 
-    public Barco(Direccion direccion, int casillas, int disparos) {
+    public Barco(Direccion direccion, int casillas, int disparos, String nombre) {
         this.id = 0;
         this.direccion = direccion;
+
         this.casillas = casillas;
-        this.piezasIntactas = casillas;
         this.disparos = disparos;
 
+        this.piezasIntactas = casillas;
+        this.disparosRestantes = disparos;
+
+        this.nombre = nombre;
     }
 
     public int getPiezasIntactas() {
@@ -33,6 +41,14 @@ public abstract class Barco {
         return disparos;
     }
 
+    public int getDisparosRestantes() {
+        return disparosRestantes;
+    }
+
+    public void setDisparosRestantes(int disparosRestantes) {
+        this.disparosRestantes = disparosRestantes;
+    }
+
     public void setPiezasIntactas(int piezasIntactas) {
         this.piezasIntactas = piezasIntactas;
     }
@@ -45,4 +61,11 @@ public abstract class Barco {
         this.disparos = disparos;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public static int parseId(int x, int y) {
+        return Integer.parseInt(Integer.toString(x) + Integer.toString(y));
+    }
 }

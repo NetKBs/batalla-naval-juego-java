@@ -4,6 +4,7 @@ public class Casilla {
 
     private Boolean fueAtacada;
     private Boolean tieneBarco;
+    private Barco barco;
 
     public Casilla(Boolean fueAtacada, Boolean tieneBarco) {
         this.fueAtacada = fueAtacada;
@@ -25,10 +26,15 @@ public class Casilla {
 
     public void setFueAtacada(Boolean fueAtacada) {
         this.fueAtacada = fueAtacada;
+        this.barco.setPiezasIntactas(this.barco.getPiezasIntactas() - 1);
     }
 
-    public void setTieneBarco(Boolean tieneBarco) {
-        this.tieneBarco = tieneBarco;
+    public void setBarco(Barco barco) {
+        this.barco = barco;
+        this.tieneBarco = true;
     }
 
+    public Barco getBarco() {
+        return this.barco;
+    }
 }

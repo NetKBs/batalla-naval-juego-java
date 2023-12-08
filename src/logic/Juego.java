@@ -12,21 +12,41 @@ public class Juego {
 
     private Fase fase = Fase.DESPLIGUE;
     private Tablero tablero;
+    private Tablero tableroComputadora;
+    private Computadora computadora;
 
     private Map<String, Integer> cantidadesBarcos = new HashMap<>();
-    private Queue<Barco> barcosDisponibles = new LinkedList<Barco>();
+    private Queue<Barco> barcosDisponiblesDespliegue = new LinkedList<Barco>();
+    private Queue<Barco> barcosDisponiblesAtaque = new LinkedList<Barco>();
+    private Queue<Barco> barcosDisponiblesAtaqueComputadora = new LinkedList<Barco>();
+
+    private Turno turno;
 
     private Juego() {
         int boardColumns = 10;
         int boardRows = 10;
 
         this.tablero = new Tablero(boardColumns, boardRows);
+        this.tableroComputadora = new Tablero(boardColumns, boardRows);
 
+        this.computadora = new Computadora();
+        Barco[][] tableroBarcosComputadora = computadora.getTablero();
+
+        for (int x = 0; x < boardColumns; x++) {
+            for (int y = 0; y < boardRows; y++) {
+                Barco barco = tableroBarcosComputadora[x][y];
+                if (barco != null) {
+                    tableroComputadora.getCasilla(x, y).setBarco(barco);
+                }
+
+            }
+        }
+
+        cantidadesBarcos.put("Portaaviones", 1);
         cantidadesBarcos.put("Acorazado", 1);
         cantidadesBarcos.put("Destructor", 2);
         cantidadesBarcos.put("Fragata", 3);
         cantidadesBarcos.put("Submarino", 5);
-        cantidadesBarcos.put("Portaaviones", 1);
 
         for (Map.Entry<String, Integer> entry : cantidadesBarcos.entrySet()) {
             String shipType = entry.getKey();
@@ -35,19 +55,24 @@ public class Juego {
             for (int j = 0; j < count; j++) {
                 switch (shipType) {
                     case "Portaaviones":
-                        barcosDisponibles.add(new Portaaviones(Direccion.HORIZONTAL));
+                        barcosDisponiblesDespliegue.add(new Portaaviones(Direccion.HORIZONTAL));
+                        barcosDisponiblesAtaqueComputadora.add(new Portaaviones(Direccion.HORIZONTAL));
                         break;
                     case "Acorazado":
-                        barcosDisponibles.add(new Acorazado(Direccion.HORIZONTAL));
+                        barcosDisponiblesDespliegue.add(new Acorazado(Direccion.HORIZONTAL));
+                        barcosDisponiblesAtaqueComputadora.add(new Acorazado(Direccion.HORIZONTAL));
                         break;
                     case "Destructor":
-                        barcosDisponibles.add(new Destructor(Direccion.HORIZONTAL));
+                        barcosDisponiblesDespliegue.add(new Destructor(Direccion.HORIZONTAL));
+                        barcosDisponiblesAtaqueComputadora.add(new Destructor(Direccion.HORIZONTAL));
                         break;
                     case "Fragata":
-                        barcosDisponibles.add(new Fragata(Direccion.HORIZONTAL));
+                        barcosDisponiblesDespliegue.add(new Fragata(Direccion.HORIZONTAL));
+                        barcosDisponiblesAtaqueComputadora.add(new Fragata(Direccion.HORIZONTAL));
                         break;
                     case "Submarino":
-                        barcosDisponibles.add(new Submarino(Direccion.HORIZONTAL));
+                        barcosDisponiblesDespliegue.add(new Submarino(Direccion.HORIZONTAL));
+                        barcosDisponiblesAtaqueComputadora.add(new Submarino(Direccion.HORIZONTAL));
                         break;
                 }
             }
@@ -61,21 +86,24 @@ public class Juego {
 
         ArrayList<Coord> rectangulosBarco = getPosicionesBarcoActual(x, y, direccion);
 
-        Barco currentBarco = barcosDisponibles.peek();
+        Barco currentBarco = barcosDisponiblesDespliegue.peek();
 
         if (rectangulosBarco.size() < currentBarco.getCasillas() || hayColision(rectangulosBarco)) {
             return;
         }
 
+        currentBarco.id = Barco.parseId(x, y);
+
         for (Coord coord : rectangulosBarco) {
             Casilla casilla = this.tablero.getCasilla(coord.x, coord.y);
-            casilla.setTieneBarco(true);
+            casilla.setBarco(currentBarco);
         }
 
-        barcosDisponibles.poll();
+        barcosDisponiblesAtaque.add(currentBarco);
+        barcosDisponiblesDespliegue.poll();
 
-        if (barcosDisponibles.size() == 0) {
-            fase = Fase.ATAQUE;
+        if (barcosDisponiblesDespliegue.size() == 0) {
+            fase = Fase.ESPERA;
         }
     }
 
@@ -93,7 +121,7 @@ public class Juego {
     public ArrayList<Coord> getPosicionesBarcoActual(int posX, int posY, Direccion pointerDireccion) {
         ArrayList<Coord> rectangulosBarco = new ArrayList<Coord>();
 
-        Barco currentBarco = barcosDisponibles.peek();
+        Barco currentBarco = barcosDisponiblesDespliegue.peek();
 
         if (pointerDireccion == Direccion.HORIZONTAL) {
             for (int c = 0; c < currentBarco.getCasillas(); c++) {
@@ -118,6 +146,52 @@ public class Juego {
         return rectangulosBarco;
     }
 
+    public void ataqueEnemigo() {
+        Barco currentBarco = barcosDisponiblesAtaqueComputadora.peek();
+
+        if (currentBarco.getDisparosRestantes() == 0 && barcosDisponiblesAtaqueComputadora.size() > 1) {
+            barcosDisponiblesAtaqueComputadora.poll();
+            currentBarco = barcosDisponiblesAtaqueComputadora.peek();
+        }
+
+        Coord coordAtaque = this.computadora.getAtaqueAleatorio();
+        Casilla casillaAtacada = tablero.getCasilla(coordAtaque.x, coordAtaque.y);
+        casillaAtacada.setFueAtacada(true);
+        currentBarco.setDisparosRestantes(currentBarco.getDisparosRestantes() - 1);
+
+        if (currentBarco.getDisparosRestantes() == 0) {
+            barcosDisponiblesAtaqueComputadora.poll();
+            return;
+        }
+    }
+
+    public void ataqueJugador(int x, int y) {
+
+        Barco currentBarco = barcosDisponiblesAtaque.peek();
+
+        if (currentBarco.getDisparosRestantes() == 0 && barcosDisponiblesAtaque.size() > 1) {
+            barcosDisponiblesAtaque.poll();
+            currentBarco = barcosDisponiblesAtaque.peek();
+        }
+
+        Casilla casillaAtacada = tableroComputadora.getCasilla(x, y);
+        casillaAtacada.setFueAtacada(true);
+        currentBarco.setDisparosRestantes(currentBarco.getDisparosRestantes() - 1);
+
+        if (currentBarco.getDisparosRestantes() == 0) {
+            barcosDisponiblesAtaque.poll();
+            return;
+        }
+    }
+
+    public void verificarBarcosJugador() {
+
+        for (Barco barco : barcosDisponiblesAtaque) {
+
+        }
+
+    }
+
     public static Juego getInstance() {
         if (instance == null) {
             instance = new Juego();
@@ -134,11 +208,44 @@ public class Juego {
         return tablero;
     }
 
+    public Tablero getTableroComputadora() {
+        return tableroComputadora;
+    }
+
     public Fase getFase() {
         return fase;
     }
 
+    public Turno getTurno() {
+        return turno;
+    }
+
+    public Queue<Barco> getBarcosDisponiblesAtaque() {
+        return barcosDisponiblesAtaque;
+    }
+
+    public Queue<Barco> getBarcosDisponiblesAtaqueComputadora() {
+        return barcosDisponiblesAtaqueComputadora;
+    }
+
+    public void cambiarTurno() {
+        if (turno == Turno.COMPUTADORA) {
+            turno = Turno.JUGADOR;
+        } else {
+            turno = Turno.COMPUTADORA;
+        }
+    }
+
+    public void setFase(Fase nuevaFase) {
+        if (fase == Fase.ESPERA && nuevaFase == Fase.ATAQUE) {
+            // TURNO ALEATORIO
+            turno = Turno.values()[(int) (Math.random() * Turno.values().length)];
+        }
+
+        fase = nuevaFase;
+    }
+
     public Queue<Barco> getBarcosDisponibles() {
-        return barcosDisponibles;
+        return barcosDisponiblesDespliegue;
     }
 }
