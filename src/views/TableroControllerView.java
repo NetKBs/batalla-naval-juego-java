@@ -1,9 +1,7 @@
-
 package views;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -70,14 +68,12 @@ public class TableroControllerView implements Initializable {
 
                 if (juego.getFase() == Fase.ATAQUE) {
                     Ganador ganador = this.verificaGanador();
-                    
+
                     if (ganador != null) {
-                        
-                        
+
                     }
 
                 }
-
             }
 
             public Ganador verificaGanador() {
@@ -86,7 +82,11 @@ public class TableroControllerView implements Initializable {
 
                 Ganador porHundimiento = verificarGanadorPorHundimiento();
 
-                if (barcosDisponiblesJugador > 0 || barcosDisponiblesComputadora > 0 || porHundimiento == null) {
+                if (porHundimiento != null && porHundimiento != Ganador.EMPATE) {
+                    return porHundimiento;
+                }
+
+                if (barcosDisponiblesJugador > 0 || barcosDisponiblesComputadora > 0) {
                     return null;
                 }
 
@@ -94,9 +94,7 @@ public class TableroControllerView implements Initializable {
                 Ganador porBarcosVivos = verificarGanadorPorBarcosVivos();
                 Ganador porAtaquesSeguidos = verificaGanadorPorAtaquesSeguidos();
 
-                if (porHundimiento != Ganador.EMPATE) {
-                    return porHundimiento;
-                } else if (porCeldas != Ganador.EMPATE) {
+                if (porCeldas != Ganador.EMPATE) {
                     return porCeldas;
                 } else if (porBarcosVivos != Ganador.EMPATE) {
                     return porBarcosVivos;
