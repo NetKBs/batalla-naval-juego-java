@@ -13,7 +13,7 @@
             <Font name="DejaVu Sans Mono Bold" size="28.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="47.0" layoutY="79.0" stroke="BLACK" strokeType="OUTSIDE" text="Tus Barcos Han Sido Destruidos">
+      <Text fill="WHITE" layoutX="47.0" layoutY="79.0" stroke="BLACK" strokeType="OUTSIDE" text="Haz Perdido">
          <font>
             <Font name="DejaVu Sans Mono Bold" size="12.0" />
          </font>

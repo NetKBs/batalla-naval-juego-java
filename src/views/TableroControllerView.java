@@ -71,6 +71,28 @@ public class TableroControllerView implements Initializable {
 
                     if (ganador != null) {
 
+                        this.stop();
+                        String ventana;
+                        if (ganador == Ganador.COMPUTADORA) {
+                            ventana = "perdiste.fxml";
+                        } else if (ganador == Ganador.JUGADOR) {
+                            ventana = "ganaste.fxml";
+                        } else {
+                            ventana = "empate.fxml";
+                        }
+                        
+                        try {
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/" + ventana));
+                            Scene scene = new Scene(loader.load());
+                            
+                            Stage stageActual = (Stage) labelPortaavion.getScene().getWindow();
+                            stageActual.setScene(scene);
+                            stageActual.setTitle("Fin Del Juego");
+                       
+                           
+                        } catch (IOException ex) {
+                            Logger.getLogger(TableroControllerView.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
 
                 }
