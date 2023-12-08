@@ -42,14 +42,25 @@ public class Juego {
         this.computadora = new Computadora();
         Barco[][] tableroBarcosComputadora = computadora.getTablero();
 
+        ArrayList<Integer> insertados = new ArrayList<>();
+
         for (int x = 0; x < boardColumns; x++) {
             for (int y = 0; y < boardRows; y++) {
                 Barco barco = tableroBarcosComputadora[x][y];
-                if (barco != null) {
-                    tableroComputadora.getCasilla(x, y).setBarco(barco);
-                    barcosDisponiblesAtaqueComputadora.add(barco);
-                    barcosComputadora.add(barco);
+                if (barco == null) {
+                    continue;
                 }
+
+                tableroComputadora.getCasilla(x, y).setBarco(barco);
+
+                if (insertados.contains(barco.id)) {
+                    continue;
+                }
+
+                barcosDisponiblesAtaqueComputadora.add(barco);
+                barcosComputadora.add(barco);
+                insertados.add(barco.id);
+
             }
         }
 
@@ -155,6 +166,11 @@ public class Juego {
 
     public void ataqueEnemigo() {
         this.verificarBarcos();
+
+        if (barcosDisponiblesAtaqueComputadora.size() == 0) {
+            return;
+        }
+
         Barco currentBarco = barcosDisponiblesAtaqueComputadora.peek();
 
         if (currentBarco == null) {
@@ -186,11 +202,14 @@ public class Juego {
             barcosDisponiblesAtaqueComputadora.poll();
         }
 
-        this.verificarBarcos();
     }
 
     public void ataqueJugador(int x, int y) {
         this.verificarBarcos();
+
+        if (barcosDisponiblesAtaque.size() == 0) {
+            return;
+        }
 
         Barco currentBarco = barcosDisponiblesAtaque.peek();
 
@@ -221,7 +240,6 @@ public class Juego {
             barcosDisponiblesAtaque.poll();
         }
 
-        this.verificarBarcos();
     }
 
     public void verificarBarcos() {

@@ -18,7 +18,7 @@ public class Computadora {
     public Computadora() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                tablero[i][j] = null; // Inicializa posición como null
+                tablero[i][j] = null;
             }
         }
 
@@ -29,11 +29,9 @@ public class Computadora {
         return tablero;
     }
 
-
-    
     public Coord atacarAleatoriamente() {
 
-       Coord coord = generarCoordenadas();
+        Coord coord = generarCoordenadas();
 
         while (verificarCoordenadaDeAtaque(coord.x, coord.y)) {
             coord.x = (int) (Math.random() * 10);
@@ -46,6 +44,8 @@ public class Computadora {
 
     private void propagarTablero() {
 
+        int id = 0;
+
         while (portaaviones == 0) {
             Portaaviones barco = new Portaaviones(obtenerDireccionAleatoria());
             Coord coords_iniciales = generarCoordenadas();
@@ -53,7 +53,8 @@ public class Computadora {
 
             if (coordsFinalesValidacion) {
                 portaaviones++;
-                barco.id = portaaviones;
+                barco.id = id;
+                id++;
                 agregarBarco(barco, coords_iniciales.x, coords_iniciales.y);
             }
         }
@@ -65,7 +66,8 @@ public class Computadora {
 
             if (coordsFinalesValidacion) {
                 acorazado++;
-                barco.id = acorazado;
+                barco.id = id;
+                id++;
                 agregarBarco(barco, coords_iniciales.x, coords_iniciales.y);
             }
         }
@@ -77,7 +79,8 @@ public class Computadora {
 
             if (coordsFinalesValidacion) {
                 destructores++;
-                barco.id = destructores;
+                barco.id = id;
+                id++;
                 agregarBarco(barco, coords_iniciales.x, coords_iniciales.y);
             }
         }
@@ -89,7 +92,8 @@ public class Computadora {
 
             if (coordsFinalesValidacion) {
                 fragatas++;
-                barco.id = fragatas;
+                barco.id = id;
+                id++;
                 agregarBarco(barco, coords_iniciales.x, coords_iniciales.y);
             }
         }
@@ -101,7 +105,8 @@ public class Computadora {
 
             if (coordsFinalesValidacion) {
                 submarinos++;
-                barco.id = submarinos;
+                barco.id = id;
+                id++;
                 agregarBarco(barco, coords_iniciales.x, coords_iniciales.y);
             }
         }
