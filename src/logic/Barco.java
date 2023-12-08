@@ -1,16 +1,11 @@
 package logic;
 
-enum Direccion{
-    HORIZONTAL,
-    VERTICAL
-}
-
 public abstract class Barco {
     private Direccion direccion;
-    private Number casillas;
-    private Number disparos;
+    private int casillas;
+    private int disparos;
 
-    public Barco(Direccion direccion, Number casillas, Number disparos) {
+    public Barco(Direccion direccion, int casillas, int disparos) {
         this.direccion = direccion;
         this.casillas = casillas;
         this.disparos = disparos;
@@ -20,11 +15,11 @@ public abstract class Barco {
         return direccion;
     }
 
-    public Number getCasillas() {
+    public int getCasillas() {
         return casillas;
     }
 
-    public Number getDisparos() {
+    public int getDisparos() {
         return disparos;
     }
 
@@ -32,12 +27,8 @@ public abstract class Barco {
         this.direccion = direccion;
     }
 
-    public void setCasillas(Number casillas) {
-        this.casillas = casillas;
-    }
-
-    public void setDisparos(Number disparos) {
+    public void setDisparos(int disparos) {
         this.disparos = disparos;
     }
-    
+
 }

@@ -2,13 +2,14 @@ package logic;
 
 public class Tablero {
 
-    private Number ancho;
-    private Number alto;
+    private int ancho;
+    private int alto;
     private Casilla[][] casillas;
 
     public Tablero(int ancho, int alto) {
         this.ancho = ancho;
         this.alto = alto;
+        this.casillas = new Casilla[ancho][alto];
 
         for (int x = 0; x < ancho; x++) {
             for (int y = 0; y < ancho; y++) {
@@ -17,11 +18,11 @@ public class Tablero {
         }
     }
 
-    public Number getAncho() {
+    public int getAncho() {
         return ancho;
     }
 
-    public Number getAlto() {
+    public int getAlto() {
         return alto;
     }
 

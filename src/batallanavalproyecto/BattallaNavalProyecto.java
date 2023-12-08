@@ -13,7 +13,7 @@ public class BattallaNavalProyecto extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/tablero.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);
-        stage.setTitle("Batalla Naval - Inicio");
+        stage.setTitle("Batalla Naval");
         stage.show();
     }
 
