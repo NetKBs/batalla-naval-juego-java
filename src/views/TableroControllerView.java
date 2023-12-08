@@ -1,13 +1,17 @@
-
 package views;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -90,9 +94,38 @@ public class TableroControllerView implements Initializable {
 
                     if (ganador != null) {
 
+                        this.stop();
+                        String ventana;
+                        if (ganador == Ganador.COMPUTADORA) {
+                            ventana = "perdiste.fxml";
+                        } else if (ganador == Ganador.JUGADOR) {
+                            ventana = "ganaste.fxml";
+                        } else {
+                            ventana = "empate.fxml";
+                        }
+                        
+                        try {
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/" + ventana));
+                            Scene scene = new Scene(loader.load());
+                            
+                            Stage stageActual = (Stage) labelPortaavion.getScene().getWindow();
+                            stageActual.setScene(scene);
+                            stageActual.setTitle("Fin Del Juego");
+                            
+                            
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(TableroControllerView.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            
+                           
+                        } catch (IOException ex) {
+                            Logger.getLogger(TableroControllerView.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
-                }
 
+                }
             }
     }   
             public Ganador verificaGanador() {
