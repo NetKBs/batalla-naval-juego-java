@@ -40,21 +40,18 @@ public class TableroControllerView implements Initializable {
     private Label labelFragata;
     @FXML
     private Label labelSubmarino;
-    @FXML 
+
+    @FXML
     private Label barcosJugadorRestantes;
 
-    @FXML     
+    @FXML
     private Label barcosEnemigoRestantes;
 
-    private int barcosRestantesJugador;  
-    private int barcosRestantesComputadora;
-    
     private Juego juego = Juego.getInstance();
-     
-    
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        
+
         Map<String, Integer> cantidadesBarcos = juego.getCantidadesBarcos();
 
         labelPortaavion.setText(cantidadesBarcos.get("Portaaviones").toString());
@@ -69,25 +66,11 @@ public class TableroControllerView implements Initializable {
         this.initGameTimer();
     }
 
-      
     public void initGameTimer() {
+
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-
-              int barcosComputador = 0;
-                for(Barco barco: juego.getBarcosComputadora()){
-                    if (barco.getPiezasIntactas() > 0 ) {
-                        barcosComputador ++;
-                    }
-                }
-                
-                int barcosJugador = 0;
-                for(Barco barco: juego.getBarcosJugador()){
-                    if (barco.getPiezasIntactas() > 0 ) {
-                        barcosJugador ++;
-                    }
-
 
                 if (juego.getFase() == Fase.ATAQUE) {
                     Ganador ganador = this.verificaGanador();
@@ -96,17 +79,20 @@ public class TableroControllerView implements Initializable {
                     int barcosRestantesComputadora = 0;
 
                     for (Barco barco : juego.getBarcosJugador()) {
-                        if (barco.getDisparosRestantes() > 0) {
+                        if (barco.getPiezasIntactas() > 0) {
                             barcosRestantesJugador++;
                         }
 
                     }
 
                     for (Barco barco : juego.getBarcosComputadora()) {
-                        if (barco.getDisparosRestantes() > 0) {
+                        if (barco.getPiezasIntactas() > 0) {
                             barcosRestantesComputadora++;
                         }
                     }
+
+                    barcosJugadorRestantes.setText(barcosRestantesJugador + "");
+                    barcosEnemigoRestantes.setText(barcosRestantesComputadora + "");
 
                     if (ganador != null) {
 
@@ -142,7 +128,7 @@ public class TableroControllerView implements Initializable {
 
                 }
             }
-    }   
+
             public Ganador verificaGanador() {
                 int barcosDisponiblesJugador = juego.getBarcosDisponiblesAtaque().size();
                 int barcosDisponiblesComputadora = juego.getBarcosDisponiblesAtaqueComputadora().size();
@@ -258,40 +244,10 @@ public class TableroControllerView implements Initializable {
                 } else {
                     return Ganador.EMPATE;
                 }
-                
-                
-           
-
-                
             }
         };
 
         timer.start();
-    }
-    
-    
-    private int barcosDestruidosJugador = 0;  
-    private int barcosDestruidosComputadora = 0;
-
-    private int barcosAnterioresJugador;  
-    private int barcosAnterioresComputadora;
-
-    private void actualizarLabels() {
-
-        if(barcosRestantesJugador < barcosAnterioresJugador) {
-            barcosDestruidosJugador++;     
-        }
-
-        if(barcosRestantesComputadora < barcosAnterioresComputadora) {
-             barcosDestruidosComputadora++;  
-        }   
-        
-
-        barcosJugadorRestantes.setText(barcosDestruidosJugador + "");
-        barcosEnemigoRestantes.setText(barcosDestruidosComputadora + "");
-
-        barcosAnterioresJugador = barcosRestantesJugador;  
-        barcosAnterioresComputadora = barcosRestantesComputadora;
     }
 
     @FXML
