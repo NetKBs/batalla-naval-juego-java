@@ -31,7 +31,7 @@ public class Computadora {
 
         while (portaaviones == 0) {
             Portaaviones barco = new Portaaviones(obtenerDireccionAleatoria());
-            Coordenada coords_iniciales = generarCoordenadas();;
+            Coordenada coords_iniciales = generarCoordenadas();
             boolean coordsFinalesValidacion = verificarPosicionBarcoFinal(barco, coords_iniciales);
 
             if (coordsFinalesValidacion) {
@@ -43,7 +43,7 @@ public class Computadora {
 
         while (acorazado == 0) {
             Acorazado barco = new Acorazado(obtenerDireccionAleatoria());
-            Coordenada coords_iniciales = generarCoordenadas();;
+            Coordenada coords_iniciales = generarCoordenadas();
             boolean coordsFinalesValidacion = verificarPosicionBarcoFinal(barco, coords_iniciales);
 
             if (coordsFinalesValidacion) {
@@ -55,7 +55,7 @@ public class Computadora {
 
         while (destructores < 2) {
             Destructor barco = new Destructor(obtenerDireccionAleatoria());
-            Coordenada coords_iniciales = generarCoordenadas();;
+            Coordenada coords_iniciales = generarCoordenadas();
             boolean coordsFinalesValidacion = verificarPosicionBarcoFinal(barco, coords_iniciales);
 
             if (coordsFinalesValidacion) {
@@ -67,7 +67,7 @@ public class Computadora {
 
         while (fragatas < 3) {
             Fragata barco = new Fragata(obtenerDireccionAleatoria());
-            Coordenada coords_iniciales = generarCoordenadas();;
+            Coordenada coords_iniciales = generarCoordenadas();
             boolean coordsFinalesValidacion = verificarPosicionBarcoFinal(barco, coords_iniciales);
 
             if (coordsFinalesValidacion) {
