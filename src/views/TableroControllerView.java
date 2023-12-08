@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.GridPane;
@@ -45,13 +46,31 @@ public class TableroControllerView implements Initializable {
 
         new TableroJugador(gridJugador);
         new TableroEnemigo(gridEnemigo);
+
+        this.initGameTimer();
+    }
+
+    public void initGameTimer() {
+
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                int barcosRestantesAtaqueJugador = juego.getBarcosDisponiblesAtaque().size();
+                int barcosRestantesAtaqueComputadora = juego.getBarcosDisponiblesAtaqueComputadora().size();
+
+                if (barcosRestantesAtaqueJugador == 0 && barcosRestantesAtaqueComputadora == 0) {
+                    // abrir vetana de resultados
+                }
+            }
+        };
+
+        timer.start();
     }
 
     @FXML
     public void onAtacarButtonClick() {
         Fase fase = juego.getFase();
         if (fase == Fase.ESPERA) {
-            System.out.println("Iniciando ataque");
             juego.setFase(Fase.ATAQUE);
         }
     }

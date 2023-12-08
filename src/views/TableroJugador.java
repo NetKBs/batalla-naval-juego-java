@@ -17,6 +17,7 @@ import logic.Direccion;
 import logic.Fase;
 import logic.Juego;
 import logic.Tablero;
+import logic.Turno;
 
 public class TableroJugador {
     GridPane gridJugador;
@@ -94,15 +95,25 @@ public class TableroJugador {
         AnimationTimer animationTimer = new AnimationTimer() {
             public void handle(long now) {
 
-                Tablero tablero = juego.getTablero();
                 Fase fase = juego.getFase();
+
+                if (fase == Fase.ATAQUE && juego.getTurno() == Turno.COMPUTADORA) {
+                    juego.ataqueEnemigo();
+                    juego.cambiarTurno();
+                }
+
+                Tablero tablero = juego.getTablero();
 
                 for (int x = 0; x < tablero.getAncho(); x++) {
                     for (int y = 0; y < tablero.getAlto(); y++) {
                         Casilla casilla = tablero.getCasilla(x, y);
                         Rectangle rectangulo = (Rectangle) gridJugador.getChildren().get(x * tablero.getAlto() + y);
 
-                        if (casilla.getTieneBarco()) {
+                        if (casilla.getTieneBarco() && casilla.getFueAtacada()) {
+                            rectangulo.setFill(javafx.scene.paint.Color.RED);
+                        } else if (casilla.getFueAtacada()) {
+                            rectangulo.setFill(javafx.scene.paint.Color.YELLOW);
+                        } else if (casilla.getTieneBarco()) {
                             rectangulo.setFill(javafx.scene.paint.Color.BLUE);
                         } else {
                             rectangulo.setFill(javafx.scene.paint.Color.WHITE);

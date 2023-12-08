@@ -12,6 +12,7 @@ import logic.Casilla;
 import logic.Fase;
 import logic.Juego;
 import logic.Tablero;
+import logic.Turno;
 
 public class TableroEnemigo {
     GridPane gridEnemigo;
@@ -24,7 +25,7 @@ public class TableroEnemigo {
     TableroEnemigo(GridPane gridEnemigo) {
         this.gridEnemigo = gridEnemigo;
 
-        Tablero tableroComputadora = new Tablero(10, 10);
+        Tablero tableroComputadora = juego.getTableroComputadora();
 
         double gridWidth = gridEnemigo.getPrefWidth();
         double gridHeight = gridEnemigo.getPrefHeight();
@@ -72,22 +73,37 @@ public class TableroEnemigo {
 
     private void handleMouseClickPrimary() {
 
+        if (juego.getTurno() != Turno.JUGADOR && juego.getFase() != Fase.ATAQUE) {
+            return;
+        }
+
+        Casilla casilla = juego.getTableroComputadora().getCasilla(pointerX, pointerY);
+
+        if (casilla.getFueAtacada()) {
+            return;
+        }
+
+        juego.ataqueJugador(pointerX, pointerY);
+        juego.cambiarTurno();
+
     }
 
     private void initAnimationTimer() {
         AnimationTimer animationTimer = new AnimationTimer() {
             public void handle(long now) {
-
-                Tablero tablero = juego.getTablero();
+                Tablero tableroComputadora = juego.getTableroComputadora();
                 Fase fase = juego.getFase();
 
-                for (int x = 0; x < tablero.getAncho(); x++) {
-                    for (int y = 0; y < tablero.getAlto(); y++) {
-                        Casilla casilla = tablero.getCasilla(x, y);
-                        Rectangle rectangulo = (Rectangle) gridEnemigo.getChildren().get(x * tablero.getAlto() + y);
+                for (int x = 0; x < tableroComputadora.getAncho(); x++) {
+                    for (int y = 0; y < tableroComputadora.getAlto(); y++) {
+                        Casilla casilla = tableroComputadora.getCasilla(x, y);
+                        Rectangle rectangulo = (Rectangle) gridEnemigo.getChildren()
+                                .get(x * tableroComputadora.getAlto() + y);
 
-                        if (casilla.getFueAtacada()) {
+                        if (casilla.getTieneBarco() && casilla.getFueAtacada()) {
                             rectangulo.setFill(javafx.scene.paint.Color.RED);
+                        } else if (casilla.getFueAtacada()) {
+                            rectangulo.setFill(javafx.scene.paint.Color.YELLOW);
                         } else {
                             rectangulo.setFill(javafx.scene.paint.Color.WHITE);
                         }
@@ -102,6 +118,11 @@ public class TableroEnemigo {
             }
 
             public void dibujarAtaqueBarcos() {
+                Casilla casilla = juego.getTableroComputadora().getCasilla(pointerX, pointerY);
+
+                if (casilla.getFueAtacada()) {
+                    return;
+                }
 
                 ObservableList<Node> gridChildren = gridEnemigo.getChildren();
                 Color color = Color.LIGHTYELLOW;
