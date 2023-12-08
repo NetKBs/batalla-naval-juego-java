@@ -26,7 +26,11 @@ public class Casilla {
 
     public void setFueAtacada(Boolean fueAtacada) {
         this.fueAtacada = fueAtacada;
-        this.barco.setPiezasIntactas(this.barco.getPiezasIntactas() - 1);
+
+        if (this.barco != null) {
+            this.barco.setPiezasIntactas(this.barco.getPiezasIntactas() - 1);
+        }
+
     }
 
     public void setBarco(Barco barco) {
