@@ -20,15 +20,13 @@ import javafx.stage.Stage;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
-import javafx.scene.shape.*;
 import javafx.scene.input.*;
 import javafx.scene.paint.*;
 import logic.*;
 
 enum Fase {
     DESPLIGUE,
-    DISPARO,
+    ATAQUE,
 }
 
 public class TableroControllerView implements Initializable {
@@ -36,7 +34,6 @@ public class TableroControllerView implements Initializable {
     @FXML
     private GridPane gridJugador;
     @FXML
-
     private Label labelPortaavion;
     @FXML
     private Label labelAcorazado;
@@ -56,34 +53,33 @@ public class TableroControllerView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        double gridAncho = gridJugador.getPrefWidth();
-        double gridAlto = gridJugador.getPrefHeight();
+        double gridWidth = gridJugador.getPrefWidth();
+        double gridHeight = gridJugador.getPrefHeight();
 
-        int columnasTablero = 10;
-        int filasTablero = 10;
+        int boardColumns = 10;
+        int boardRows = 10;
 
-        this.tablero = new Tablero(columnasTablero, filasTablero);
+        this.tablero = new Tablero(boardColumns, boardRows);
 
-        Map<String, Number> cantidadesBarcos = new HashMap<String, Number>();
+        Map<String, Integer> shipCounts = new HashMap<>();
+        shipCounts.put("Acorazado", 1);
+        shipCounts.put("Destructor", 2);
+        shipCounts.put("Fragata", 3);
+        shipCounts.put("Submarino", 5);
+        shipCounts.put("Portaaviones", 1);
 
-        cantidadesBarcos.put("Portaaviones", 1);
-        // cantidadesBarcos.put("Acorazado", 1);
-        // cantidadesBarcos.put("Destructor", 2);
-        // cantidadesBarcos.put("Fragata", 3);
-        // cantidadesBarcos.put("Submarino", 5);
+        labelPortaavion.setText(shipCounts.get("Portaaviones").toString());
+        labelAcorazado.setText(shipCounts.get("Acorazado").toString());
+        labelDestructor.setText(shipCounts.get("Destructor").toString());
+        labelFragata.setText(shipCounts.get("Fragata").toString());
+        labelSubmarino.setText(shipCounts.get("Submarino").toString());
 
-        labelPortaavion.setText(cantidadesBarcos.get("Portaaviones").toString());
-        // labelAcorazado.setText(cantidadesBarcos.get("Acorazado").toString());
-        // labelDestructor.setText(cantidadesBarcos.get("Destructor").toString());
-        // labelFragata.setText(cantidadesBarcos.get("Fragata").toString());
-        // labelSubmarino.setText(cantidadesBarcos.get("Submarino").toString());
+        for (Map.Entry<String, Integer> entry : shipCounts.entrySet()) {
+            String shipType = entry.getKey();
+            int count = entry.getValue();
 
-        for (Map.Entry<String, Number> entry : cantidadesBarcos.entrySet()) {
-            String barco = entry.getKey();
-            Integer cantidad = entry.getValue().intValue();
-
-            for (int j = 0; j < cantidad; j++) {
-                switch (barco) {
+            for (int j = 0; j < count; j++) {
+                switch (shipType) {
                     case "Portaaviones":
                         barcosDisponibles.add(new Portaaviones(Direccion.HORIZONTAL));
                         break;
@@ -105,29 +101,29 @@ public class TableroControllerView implements Initializable {
 
         gridJugador.setAlignment(Pos.CENTER);
 
-        for (int x = 0; x < columnasTablero; x++) {
-            for (int y = 0; y < filasTablero; y++) {
+        for (int x = 0; x < boardColumns; x++) {
+            for (int y = 0; y < boardRows; y++) {
                 final int finalX = x;
                 final int finalY = y;
 
-                Rectangle rectangulo = new Rectangle();
-                rectangulo.setWidth(gridAncho / columnasTablero);
-                rectangulo.setHeight(gridAlto / filasTablero);
+                Rectangle rectangle = new Rectangle();
+                rectangle.setWidth(gridWidth / boardColumns);
+                rectangle.setHeight(gridHeight / boardRows);
 
-                rectangulo.setFill(javafx.scene.paint.Color.WHITE);
-                rectangulo.setStroke(javafx.scene.paint.Color.BLACK);
+                rectangle.setFill(javafx.scene.paint.Color.WHITE);
+                rectangle.setStroke(javafx.scene.paint.Color.BLACK);
 
-                rectangulo.setOnMouseEntered(e -> this.handleMouseEntered(rectangulo, finalX, finalY));
-                rectangulo.setOnMouseExited(e -> this.handleMouseExited(rectangulo, finalX, finalY));
-                rectangulo.setOnMouseClicked(e -> {
+                rectangle.setOnMouseEntered(e -> this.handleMouseEntered(rectangle, finalX, finalY));
+                rectangle.setOnMouseExited(e -> this.handleMouseExited(rectangle, finalX, finalY));
+                rectangle.setOnMouseClicked(e -> {
                     if (e.getButton() == MouseButton.PRIMARY) {
-                        this.handleMouseClickPrimary(rectangulo, finalX, finalY);
+                        this.handleMouseClickPrimary();
                     } else if (e.getButton() == MouseButton.SECONDARY) {
-                        this.handleMouseClickSecondary(rectangulo, finalX, finalY);
+                        this.handleMouseClickSecondary();
                     }
                 });
 
-                gridJugador.add(rectangulo, x, y);
+                gridJugador.add(rectangle, x, y);
             }
         }
 
@@ -144,11 +140,32 @@ public class TableroControllerView implements Initializable {
         this.pointerY = -1;
     }
 
-    private void handleMouseClickPrimary(Rectangle rectangulo, int x, int y) {
+    private void handleMouseClickPrimary() {
+        if (fase != Fase.DESPLIGUE) {
+            return;
+        }
 
+        ArrayList<Coord> rectangulosBarco = getPosicionesBarcoActual();
+
+        Barco currentBarco = barcosDisponibles.peek();
+
+        if (rectangulosBarco.size() < currentBarco.getCasillas() || hayColision(rectangulosBarco)) {
+            return;
+        }
+
+        for (Coord coord : rectangulosBarco) {
+            Casilla casilla = this.tablero.getCasilla(coord.x, coord.y);
+            casilla.setTieneBarco(true);
+        }
+
+        barcosDisponibles.poll();
+
+        if (barcosDisponibles.size() == 0) {
+            fase = Fase.ATAQUE;
+        }
     }
 
-    private void handleMouseClickSecondary(Rectangle rectangulo, int x, int y) {
+    private void handleMouseClickSecondary() {
         if (pointerDireccion == Direccion.HORIZONTAL) {
             pointerDireccion = Direccion.VERTICAL;
         } else if (pointerDireccion == Direccion.VERTICAL) {
@@ -162,8 +179,15 @@ public class TableroControllerView implements Initializable {
 
                 for (int x = 0; x < tablero.getAncho(); x++) {
                     for (int y = 0; y < tablero.getAlto(); y++) {
+                        Casilla casilla = tablero.getCasilla(x, y);
                         Rectangle rectangulo = (Rectangle) gridJugador.getChildren().get(x * tablero.getAlto() + y);
-                        rectangulo.setFill(javafx.scene.paint.Color.WHITE);
+
+                        if (casilla.getTieneBarco()) {
+                            rectangulo.setFill(javafx.scene.paint.Color.BLUE);
+                        } else {
+                            rectangulo.setFill(javafx.scene.paint.Color.WHITE);
+                        }
+
                     }
                 }
 
@@ -174,40 +198,16 @@ public class TableroControllerView implements Initializable {
             }
 
             public void dibujarColocacionBarcos() {
-                Casilla casilla = tablero.getCasilla(pointerX, pointerY);
-
-                if (casilla.getTieneBarco()) {
-                    return;
-                }
-
                 ObservableList<Node> gridChildren = gridJugador.getChildren();
                 Barco currentBarco = barcosDisponibles.peek();
-
-                ArrayList<Coord> rectangulosBarco = new ArrayList<Coord>();
-
-                if (pointerDireccion == Direccion.HORIZONTAL) {
-                    for (int c = 0; c < currentBarco.getCasillas(); c++) {
-                        int x = pointerX + c;
-
-                        if (x < 0 || x >= tablero.getAncho()) {
-                            continue;
-                        }
-
-                        rectangulosBarco.add(new Coord(x, pointerY));
-                    }
-                } else if (pointerDireccion == Direccion.VERTICAL) {
-                    for (int c = 0; c < currentBarco.getCasillas(); c++) {
-                        int y = pointerY + c;
-                        if (y < 0 || y >= tablero.getAlto()) {
-                            continue;
-                        }
-                        rectangulosBarco.add(new Coord(pointerX, y));
-                    }
-                }
-
                 Color color = Color.LIGHTBLUE;
+                ArrayList<Coord> rectangulosBarco = getPosicionesBarcoActual();
 
                 if (rectangulosBarco.size() < currentBarco.getCasillas()) {
+                    color = Color.LIGHTCORAL;
+                }
+
+                if (hayColision(rectangulosBarco)) {
                     color = Color.LIGHTCORAL;
                 }
 
@@ -220,6 +220,45 @@ public class TableroControllerView implements Initializable {
         };
 
         animationTimer.start();
+    }
+
+    private ArrayList<Coord> getPosicionesBarcoActual() {
+        ArrayList<Coord> rectangulosBarco = new ArrayList<Coord>();
+
+        Barco currentBarco = barcosDisponibles.peek();
+
+        if (pointerDireccion == Direccion.HORIZONTAL) {
+            for (int c = 0; c < currentBarco.getCasillas(); c++) {
+                int x = pointerX + c;
+
+                if (x < 0 || x >= tablero.getAncho()) {
+                    continue;
+                }
+
+                rectangulosBarco.add(new Coord(x, pointerY));
+            }
+        } else if (pointerDireccion == Direccion.VERTICAL) {
+            for (int c = 0; c < currentBarco.getCasillas(); c++) {
+                int y = pointerY + c;
+                if (y < 0 || y >= tablero.getAlto()) {
+                    continue;
+                }
+                rectangulosBarco.add(new Coord(pointerX, y));
+            }
+        }
+
+        return rectangulosBarco;
+    }
+
+    private boolean hayColision(ArrayList<Coord> posiciones) {
+        for (Coord coord : posiciones) {
+            Casilla casilla = tablero.getCasilla(coord.x, coord.y);
+            if (casilla.getTieneBarco()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @FXML
