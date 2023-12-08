@@ -69,9 +69,26 @@ public class TableroControllerView implements Initializable {
                 if (juego.getFase() == Fase.ATAQUE) {
                     Ganador ganador = this.verificaGanador();
 
+                    int barcosRestantesJugador = 0;
+                    int barcosRestantesComputadora = 0;
+
+                    for (Barco barco : juego.getBarcosJugador()) {
+                        if (barco.getDisparosRestantes() > 0) {
+                            barcosRestantesJugador++;
+                        }
+
+                    }
+
+                    for (Barco barco : juego.getBarcosComputadora()) {
+                        if (barco.getDisparosRestantes() > 0) {
+                            barcosRestantesComputadora++;
+                        }
+                    }
+
                     if (ganador != null) {
 
                         this.stop();
+
                         String ventana;
                         if (ganador == Ganador.COMPUTADORA) {
                             ventana = "perdiste.fxml";
@@ -80,23 +97,21 @@ public class TableroControllerView implements Initializable {
                         } else {
                             ventana = "empate.fxml";
                         }
-                        
+
                         try {
                             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/" + ventana));
                             Scene scene = new Scene(loader.load());
-                            
+
                             Stage stageActual = (Stage) labelPortaavion.getScene().getWindow();
                             stageActual.setScene(scene);
                             stageActual.setTitle("Fin Del Juego");
-                            
-                            
+
                             try {
-                                Thread.sleep(2000);
+                                Thread.sleep(1000);
                             } catch (InterruptedException ex) {
                                 Logger.getLogger(TableroControllerView.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            
-                           
+
                         } catch (IOException ex) {
                             Logger.getLogger(TableroControllerView.class.getName()).log(Level.SEVERE, null, ex);
                         }
